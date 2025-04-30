@@ -1,0 +1,39 @@
+.nav-active {
+    background-color: #2952ff;
+    border-radius: 30px;
+    color: white;
+}
+
+.scrollX {
+    height: 600px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.bg-card {
+    background: url(https://diandidaktika.sch.id/assets/images/il-header.jpg)
+        no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 
+.input {
+    padding: 15px 35px;
+    font-size: 18px;
+}
+
+.btn-primary {
+    padding: 15px 35px;
+    font-size: 18px;
+} */
