@@ -277,13 +277,16 @@
                         @csrf
                         <div class="mb-3">
                             <label for="user_id" class="form-label">Select User</label>
-                            <select name="user_id" id="user_id" class="form-control" required>
+                            <select name="user_id" id="user_id" class="form-control select2" required></select>
+
+                            {{-- <select name="user_id" id="user_id" class="form-control select2" required>
                                 <option value="">-- Choose User --</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->fullname }}</option>
                                 @endforeach
-                            </select>
+                            </select> --}}
                         </div>
+
                         <div class="mb-3">
                             <label for="school_id" class="form-label">Select School</label>
                             <select name="school_id" id="school_id" class="form-control" required>
@@ -303,4 +306,34 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $('#assignSchoolModal').on('shown.bs.modal', function() {
+            $('#user_id').select2({
+                placeholder: 'Pilih User',
+                allowClear: true,
+                dropdownParent: $('#assignSchoolModal'),
+                ajax: {
+                    url: '{{ route('get.users') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+    </script>
 @endsection

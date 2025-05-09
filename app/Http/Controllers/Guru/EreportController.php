@@ -37,6 +37,41 @@ class EreportController extends Controller
         return view('guru.eraport.index', compact('ereports', 'user', 'teacherClass', 'students', 'tahunAjarans'));
     }
 
+    public function getStudent(Request $request)
+    {
+        $search = $request->get('search');
+        $schoolId = $request->get('school_id');  // Ambil school_id dari request
+        $classId = $request->get('class_id');    // Ambil class_id dari request
+
+        $students = Student::query();
+
+        // Filter berdasarkan school_id dan class_id
+        if ($schoolId) {
+            $students->where('school_id', $schoolId);
+        }
+
+        if ($classId) {
+            $students->where('class_id', $classId);
+        }
+
+        // Filter berdasarkan search term
+        if ($search) {
+            $students->where('fullname', 'like', "%{$search}%");
+        }
+
+        // Ambil hasil terbatas 50 siswa
+        $results = $students->limit(50)->get()->map(function ($student) {
+            return [
+                'id' => $student->id,
+                'text' => $student->fullname,  // Menampilkan fullname siswa
+            ];
+        });
+
+        return response()->json(['results' => $results]);
+    }
+
+
+
 
     public function store(Request $request)
     {
@@ -75,28 +110,28 @@ class EreportController extends Controller
             'tahun_ajaran_id' => 'required|string',
             'report_file' => 'nullable|file|mimes:pdf|max:10240',
         ]);
-    
+
         $ereport = Ereport::findOrFail($id);
-    
+
         // Jika ada file baru diupload
         if ($request->hasFile('report_file')) {
             // Hapus file lama jika ada
             if ($ereport->report_file && Storage::disk('public')->exists($ereport->report_file)) {
                 Storage::disk('public')->delete($ereport->report_file);
             }
-    
+
             // Simpan file baru
             $file = $request->file('report_file');
             $path = $file->store('ereports', 'public');
             $ereport->report_file = $path;
         }
-    
+
         // Update field lainnya
         $ereport->student_id = $request->student_id;
         $ereport->tahun_ajaran_id = $request->tahun_ajaran_id;
-    
+
         $ereport->save();
-    
+
         return redirect()->back()->with('success', 'Ereport berhasil diperbarui!');
     }
 

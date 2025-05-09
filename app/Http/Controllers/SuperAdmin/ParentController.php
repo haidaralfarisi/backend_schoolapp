@@ -42,6 +42,39 @@ class ParentController extends Controller
         return view('superadmin.parent.index', compact('parents', 'students'));
     }
 
+    public function getStudent(Request $request)
+    {
+        $search = $request->get('search');
+        $schoolId = $request->get('school_id');  // Ambil school_id dari request
+        $classId = $request->get('class_id');    // Ambil class_id dari request
+
+        $students = Student::query();
+
+        // Filter berdasarkan school_id dan class_id
+        if ($schoolId) {
+            $students->where('school_id', $schoolId);
+        }
+
+        if ($classId) {
+            $students->where('class_id', $classId);
+        }
+
+        // Filter berdasarkan search term
+        if ($search) {
+            $students->where('fullname', 'like', "%{$search}%");
+        }
+
+        // Ambil hasil terbatas 50 siswa
+        $results = $students->limit(50)->get()->map(function ($student) {
+            return [
+                'id' => $student->id,
+                'text' => $student->fullname,  // Menampilkan fullname siswa
+            ];
+        });
+
+        return response()->json(['results' => $results]);
+    }
+
 
     public function store(Request $request)
     {

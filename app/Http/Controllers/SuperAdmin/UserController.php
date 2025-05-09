@@ -67,6 +67,26 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'User berhasil ditambahkan.');
     }
 
+    public function getUsers(Request $request)
+    {
+        $search = $request->get('search');
+
+        $users = User::query();
+
+        if ($search) {
+            $users->where('fullname', 'like', '%' . $search . '%');
+        }
+
+        $results = $users->limit(50)->get()->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'text' => $user->fullname,
+            ];
+        });
+
+        return response()->json(['results' => $results]);
+    }
+
 
     public function update(Request $request, $id)
     {

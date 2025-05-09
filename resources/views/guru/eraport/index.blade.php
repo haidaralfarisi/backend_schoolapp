@@ -144,7 +144,7 @@
 
                                                     <div class="mb-3">
                                                         <label for="student_id" class="form-label">Student</label>
-                                                        <select name="student_id" class="form-control" required>
+                                                        <select name="student_id" class="form-control select2" required>
                                                             <option value="">- Pilih Siswa -</option>
                                                             @foreach ($students as $student)
                                                                 <option value="{{ $student->student_id }}"
@@ -223,17 +223,17 @@
 
                     <form action="{{ route('guru.ereports.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="school_id" value="{{ $teacherClass->school->school_id ?? '' }}">
-                        <input type="hidden" name="class_id" value="{{ $teacherClass->class_id }}">
+                        <input type="hidden" name="school_id" id="school_id"
+                            value="{{ $teacherClass->school->school_id ?? '' }}">
+                        <input type="hidden" name="class_id" id="class_id" value="{{ $teacherClass->class_id }}">
                         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
 
                         <div class="mb-3">
                             <label for="student_id" class="form-label">Student ID</label>
-                            <select name="student_id" class="form-control" required>
-                                <option value="">- Pilih Siswa - </option>
-                                @foreach ($students as $student)
-                                    <option value="{{ $student->student_id }}">{{ $student->fullname }}</option>
-                                @endforeach
+                            {{-- <select name="student_id" class="form-control" id="select2"> --}}
+                            <select name="student_id" class="form-control" id="select2"></select>
+
+
                             </select>
                         </div>
 
@@ -265,4 +265,41 @@
 
     <!-- FontAwesome for Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            $('#addEreportModal').on('shown.bs.modal', function() {
+                $('#select2').select2({
+                    dropdownParent: $('#addEreportModal'),
+                    placeholder: 'Pilih Siswa',
+                    minimumInputLength: 0,
+                    ajax: {
+                        url: '{{ route('guru.ereports.getStudent') }}',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                search: params.term || '',
+                                school_id: $('#school_id').val(),
+                                class_id: $('#class_id').val()
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: data.results
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            });
+
+        });
+    </script>
+
 @endsection

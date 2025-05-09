@@ -79,6 +79,9 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
     Route::delete('/users/{id}', [SUPERADMINUSER::class, 'destroy'])->name('superadmin.users.destroy');
     Route::get('/users/search', [SUPERADMINUSER::class, 'search'])->name('users.search');
 
+    Route::get('/get-users', [SUPERADMINUSER::class, 'getUsers'])->name('get.users');
+
+
 
     # Untuk Aksi Data User Orang Tua
     Route::get('/users-parent', [SUPERADMINORANGTUA::class, 'index'])->name('superadmin.parent.index');
@@ -86,6 +89,7 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
     Route::post('/users-parent/assign', [SUPERADMINORANGTUA::class, 'assign'])->name('superadmin.parent.assign');
     // Route::post('/manage-parent', [SUPERADMINORANGTUA::class, 'store'])->name('superadmin.parent.store');
     Route::post('/parent/{id}/update-students', [SUPERADMINORANGTUA::class, 'updateStudents'])->name('parents.updateStudents');
+    
 
     // Route::delete('/parents/{parentId}/remove-student/{studentId}', [SUPERADMINORANGTUA::class, 'removeStudent'])->name('parents.removeStudent');
 
@@ -246,6 +250,8 @@ Route::prefix('guru')->middleware(['auth', 'level:GURU'])->group(function () {
 
     # Untuk Aksi Data Ereport
     Route::get('/ereports', [GuruEreport::class, 'index'])->name('guru.ereports.index');
+    Route::get('/getStudent', [GuruEreport::class, 'getStudent'])->name('guru.ereports.getStudent');
+
     Route::post('/ereports', [GuruEreport::class, 'store'])->name('guru.ereports.store');
     Route::put('/ereports/{id}', [GuruEreport::class, 'update'])->name('guru.ereports.update');
     Route::delete('/eraports/{id}', [GuruEreport::class, 'destroy'])->name('guru.ereports.destroy');
