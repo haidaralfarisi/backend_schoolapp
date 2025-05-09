@@ -33,7 +33,15 @@
                         <span class="badge bg-primary">{{ $school->school_id }}</span>
                     </h3>
 
-                    <div>
+                    <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+                        <form action="{{ route('students.search', $school->school_id) }}" method="GET" class="d-flex">
+                            <input type="text" name="search" class="form-control" placeholder="Cari siswa..."
+                                value="{{ request('search') }}">
+                            <button type="submit" class="btn btn-outline-secondary ms-2">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+
                         <!-- ADD BUTTON -->
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClassModal">
                             <i class="fas fa-plus"></i> Add Student
@@ -45,7 +53,6 @@
                             <i class="fas fa-file-import"></i> Import Students
                         </a>
                     </div>
-
                 </div>
                 {{-- 
                 @if ($errors->any())
@@ -65,32 +72,38 @@
                     </div>
                 @endif
 
-                <div class>
+                <div>
                     <table class="table table-bordered text-nowrap">
                         <thead>
                             <tr>
                                 <th width="30">No</th>
                                 <th>Student ID</th>
                                 <th>School ID</th>
-                                <th>Class ID</th>
-                                <th>NISN</th>
+                                {{-- <th>Class ID</th> --}}
+                                {{-- <th>NISN</th> --}}
+                                <th>NIS</th>
                                 <th>Full Name</th>
                                 {{-- <th>User Name</th> --}}
                                 <th>Gender</th>
                                 {{-- <th>Place Of Born</th> --}}
                                 <th>Parent</th>
                                 <th>Entry Year</th>
-                                <th>Aksi</th>
+                                <th>Image</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($students as $student)
+                            @foreach ($students as $index => $student)
                                 <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $students->firstItem() + $index }}</td>
+                                    {{-- @foreach ($students as $student)
+                                <tr>
+                                    <td class="text-center">{{ $loop->iteration }}</td> --}}
                                     <td>{{ $student->student_id }}</td>
                                     <td>{{ $student->school->school_name ?? '-' }}</td> <!-- Menampilkan nama sekolah -->
-                                    <td>{{ $student->class_id }}</td>
-                                    <td>{{ $student->nisn }}</td>
+                                    {{-- <td>{{ $student->class_id }}</td> --}}
+                                    {{-- <td>{{ $student->nisn }}</td> --}}
+                                    <td>{{ $student->nis }}</td>
                                     <td>{{ $student->fullname }}</td>
                                     {{-- <td>{{ $student->username }}</td> --}}
                                     <td>{{ $student->gender }}</td>
@@ -98,6 +111,16 @@
                                     {{-- <td>{{ $student->dob }}</td> --}}
                                     <td>{{ $student->user_id ?? '-' }}</td>
                                     <td>{{ $student->entry_year }}</td>
+
+                                    <td class="text-center">
+                                        @if ($student->image)
+                                            <img src="{{ asset('storage/' . $student->image) }}" alt="photo"
+                                                width="50" height="50" class="rounded-circle">
+                                        @else
+                                            <span>No Photo</span>
+                                        @endif
+                                    </td>
+
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
@@ -144,7 +167,7 @@
                                             <div class="modal-body">
                                                 <form id="editStudentForm"
                                                     action="{{ route('superadmin.students.update', ['student_id' => $student->student_id]) }}"
-                                                    method="POST">
+                                                    method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     @method('PUT')
 
@@ -164,17 +187,18 @@
                                                             name="nisn" value="{{ $student->nisn }}" required>
                                                     </div>
 
+                                                    <!-- NIS -->
+                                                    <div class="mb-3">
+                                                        <label for="nis" class="form-label">NIS</label>
+                                                        <input type="text" class="form-control" id="nis"
+                                                            name="nis" value="{{ $student->nis }}" required>
+                                                    </div>
+
                                                     <!-- Fullname -->
                                                     <div class="mb-3">
                                                         <label for="fullname" class="form-label">Full Name</label>
                                                         <input type="text" class="form-control" id="fullname"
                                                             name="fullname" value="{{ $student->fullname }}" required>
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label for="username" class="form-label">User Name</label>
-                                                        <input type="text" class="form-control" id="username"
-                                                            name="username" value="{{ $student->username }}" required>
                                                     </div>
 
                                                     <!-- School ID -->
@@ -229,6 +253,25 @@
                                                             required>
                                                     </div>
 
+                                                    <div class="mb-3">
+                                                        <label for="image" class="form-label">Foto Siswa</label>
+
+                                                        {{-- Tampilkan gambar saat ini jika ada --}}
+                                                        @if ($student->image)
+                                                            <div class="mb-2">
+                                                                <img src="{{ asset('storage/' . $student->image) }}"
+                                                                    alt="Foto Siswa" style="max-height: 150px;">
+                                                            </div>
+                                                        @endif
+
+                                                        <input type="file" class="form-control" id="image"
+                                                            name="image" accept="image/*">
+                                                        <small class="text-muted">Kosongkan jika tidak ingin mengganti
+                                                            foto.</small>
+                                                    </div>
+
+
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary"
                                                             data-bs-dismiss="modal">Close</button>
@@ -244,7 +287,9 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{-- {{ $users->links() }} --}}
+                    <div class="d-flex justify-content-center">
+                        {{ $students->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -259,7 +304,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('superadmin.students.store') }}" method="POST">
+                    <form action="{{ route('superadmin.students.store') }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         {{-- <div class="mb-3">
                             <label for="student_id" class="form-label">Student ID</label>
@@ -292,19 +338,28 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="nis" class="form-label">NIS</label>
+                            <input type="text" class="form-control" id="nis" name="nis"
+                                value="{{ old('nis') }}" required>
+                            @if ($errors->has('nis'))
+                                <div class="text-danger">{{ $errors->first('nis') }}</div>
+                            @endif
+                        </div>
+
+                        <div class="mb-3">
                             <label for="fullname" class="form-label">Full Name</label>
                             <input type="text" class="form-control" id="fullname" name="fullname"
                                 value="{{ old('fullname') }}" required>
                         </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="username" class="form-label">User Name</label>
                             <input type="text" class="form-control" id="username" name="username"
                                 value="{{ old('username') }}" required>
                             @if ($errors->has('username'))
                                 <div class="text-danger">{{ $errors->first('username') }}</div>
                             @endif
-                        </div>
+                        </div> --}}
 
                         <div class="mb-3">
                             <label for="gender" class="form-label">Gender</label>
@@ -329,6 +384,10 @@
                             <label for="entry_year" class="form-label">Entry Year</label>
                             <input type="number" class="form-control" id="entry_year" name="entry_year"
                                 value="{{ old('entry_year') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="image" name="image" required>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

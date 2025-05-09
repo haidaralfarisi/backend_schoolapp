@@ -16,23 +16,25 @@
 
             <div class="container-fluid">
                 <!-- HEADER & BUTTON -->
-                <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap">
                     <h3 class="card-title d-flex align-items-center gap-2 mb-0">
                         Manage Your Parents Students
-                        {{-- <span>
-                                    <iconify-icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted"
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        data-bs-custom-class="tooltip-success"
-                                        data-bs-title="Traffic Overview"></iconify-icon>
-                                </span> --}}
                     </h3>
-
-                    <!-- ADD BUTTON -->
-                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addParentModal">
-                        <i class="fas fa-plus"></i> Add Parents
-                    </a>
-
+                
+                    <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+                        <!-- FORM SEARCH -->
+                        <form action="{{ route('parents.search') }}" method="GET" class="d-flex">
+                            <input type="text" name="search" class="form-control" placeholder="Cari orangtua..." value="{{ request('search') }}">
+                            <button type="submit" class="btn btn-outline-secondary ms-2"><i class="fas fa-search"></i></button>
+                        </form>
+                
+                        <!-- ADD BUTTON -->
+                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addParentModal">
+                            <i class="fas fa-plus"></i> Add Parents
+                        </a>
+                    </div>
                 </div>
+                
 
                 {{-- @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -160,37 +162,32 @@
                                                         <div id="studentDropdowns">
                                                             @foreach ($parent->students as $student)
                                                                 <div class="input-group mb-2 student-select-row">
-                                                                    <select name="student_ids[]" class="form-select">
+                                                                    <select name="student_ids[]" class="form-select select2">
                                                                         <option value="">-- Pilih Siswa --</option>
                                                                         @foreach ($students as $s)
-                                                                            <option value="{{ $s->id }}"
-                                                                                {{ $s->id == $student->id ? 'selected' : '' }}>
+                                                                            <option value="{{ $s->id }}" {{ $s->id == $student->id ? 'selected' : '' }}>
                                                                                 {{ $s->student_id }} - {{ $s->fullname }}
                                                                             </option>
                                                                         @endforeach
                                                                     </select>
-                                                                    <button type="button"
-                                                                        class="btn btn-danger ms-2 remove-row"><i
-                                                                            class="fa fa-trash"></i></button>
+                                                                    <button type="button" class="btn btn-danger ms-2 remove-row"><i class="fa fa-trash"></i></button>
                                                                 </div>
                                                             @endforeach
-
+                                                        
                                                             {{-- Row kosong untuk tambah baru --}}
                                                             <div class="input-group mb-2 student-select-row">
-                                                                <select name="student_ids[]" class="form-select">
+                                                                <select name="student_ids[]" class="form-select select2">
                                                                     <option value="">-- Pilih Siswa --</option>
                                                                     @foreach ($students as $student)
                                                                         <option value="{{ $student->id }}">
-                                                                            {{ $student->student_id }} -
-                                                                            {{ $student->fullname }}
+                                                                            {{ $student->student_id }} - {{ $student->fullname }}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
-                                                                <button type="button"
-                                                                    class="btn btn-danger ms-2 remove-row"><i
-                                                                        class="fa fa-trash"></i></button>
+                                                                <button type="button" class="btn btn-danger ms-2 remove-row"><i class="fa fa-trash"></i></button>
                                                             </div>
                                                         </div>
+                                                        
 
                                                         <!-- Tombol tambah -->
                                                         <button type="button" class="btn btn-secondary mt-2"

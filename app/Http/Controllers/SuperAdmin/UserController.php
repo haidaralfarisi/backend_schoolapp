@@ -14,9 +14,26 @@ class UserController extends Controller
     public function index()
     {
         $users = User::where('level', '!=', 'ORANGTUA')->paginate(10); // Ambil semua user kecuali level orangtua
-        
+
         return view('superadmin.user.index', compact('users'));
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $users = User::where('level', '!=', 'ORANGTUA')
+            ->where(function ($query) use ($search) {
+                $query->where('fullname', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('nip', 'like', "%{$search}%")
+                    ->orWhere('level', 'like', "%{$search}%");
+            })
+            ->paginate(10);
+
+        return view('superadmin.user.index', compact('users'));
+    }
+
 
     public function store(Request $request)
     {

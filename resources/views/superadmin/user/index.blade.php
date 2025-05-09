@@ -27,10 +27,18 @@
                                 </span> --}}
                     </h3>
 
-                    <!-- ADD BUTTON -->
-                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                        <i class="fas fa-plus"></i> Add User
-                    </a>
+                    <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+                        <!-- FORM SEARCH -->
+                        <form action="{{ route('users.search') }}" method="GET" class="d-flex">
+                            <input type="text" name="search" class="form-control" placeholder="Cari user..." value="{{ request('search') }}">
+                            <button type="submit" class="btn btn-outline-secondary ms-2"><i class="fas fa-search"></i></button>
+                        </form>
+                
+                        <!-- ADD BUTTON -->
+                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                            <i class="fas fa-plus"></i> Add User
+                        </a>
+                    </div>
 
                 </div>
 

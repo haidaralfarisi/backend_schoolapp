@@ -10,7 +10,7 @@ class StudentTemplateExport implements FromArray, WithHeadings
     public function array(): array
     {
         return [
-            ['2025CNTK001', 'CNTK', 'CNTK1', '1234567890', 'Renata', 'renata', 'Male', 'Depok', '14/03/2001', '2023'],
+            ['2025CN.KBTK001', 'CN.KBTK', 'CN.KB1', '1234567890', '1234', 'Renata', 'Male', 'Depok', '14/03/2001', '2025', 'No image'],
         ];
     }
 
@@ -21,12 +21,13 @@ class StudentTemplateExport implements FromArray, WithHeadings
             'school_id',
             'class_id',
             'nisn',
+            'nis',
             'fullname',
-            'username',
             'gender',
             'pob',
             'dob',
             'entry_year',
+            'image',
         ];
     }
 }

@@ -21,14 +21,14 @@ class Student extends Model
     //     'class_id',
     //     'user_id',
     //     'entry_year',
-    protected $guarded=['id'];
+    protected $guarded = ['id'];
 
 
     public function school()
     {
         return $this->belongsTo(School::class, 'school_id', 'school_id');
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -47,5 +47,10 @@ class Student extends Model
     public function photos()
     {
         return $this->hasMany(Photo::class);
+    }
+
+    public function ereports()
+    {
+        return $this->hasMany(Ereport::class, 'student_id', 'id');
     }
 }

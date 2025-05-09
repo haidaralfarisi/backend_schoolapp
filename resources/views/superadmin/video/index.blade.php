@@ -72,10 +72,14 @@
                                     <td>{{ $video->class_id ?? 'N/A' }}</td>
                                     <td class="text-nowrap">{{ $video->description }}</td>
                                     <td>
-                                        <a href="{{ $video->url }}" target="_blank"
-                                            class="btn btn-sm btn-danger d-inline-flex align-items-center">
-                                            <i class="fab fa-youtube me-2"></i> Tonton Video
-                                        </a>
+                                        @if (!empty($video->url))
+                                            <a href="{{ $video->url }}" target="_blank"
+                                                class="btn btn-sm btn-danger d-inline-flex align-items-center">
+                                                <i class="fab fa-youtube me-2"></i> Tonton Video
+                                            </a>
+                                        @else
+                                            <span class="text-muted">Tidak ada URL</span>
+                                        @endif
                                     </td>
                                     <td>
                                         <div class="dropdown">
@@ -170,7 +174,7 @@
                                                     <div class="mb-3">
                                                         <label class="form-label">URL</label>
                                                         <input type="text" class="form-control" name="url"
-                                                            value="{{ old('url', $video->url) }}" required>
+                                                            value="{{ old('url', $video->url) }}">
                                                     </div>
 
                                                     <!-- Modal Footer -->
@@ -210,7 +214,7 @@
                         @csrf
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
+                            <input type="text" placeholder="Title"  class="form-control" id="title" name="title" required>
                         </div>
 
                         <div class="mb-3">
@@ -234,13 +238,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="url" class="form-label">URL</label>
-                            <input type="text" class="form-control" id="url" name="url" required>
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" placeholder="Description" id="desc" name="desc" rows="4" required></textarea>
                         </div>
 
                         <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="description" name="description" required>
+                            <label for="url" class="form-label">URL</label>
+                            <input type="text" placeholder="Url" class="form-control" id="url" name="url">
                         </div>
 
                         <div class="modal-footer">

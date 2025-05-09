@@ -6,7 +6,7 @@
         data-sidebar-position="fixed" data-header-position="fixed">
 
         <!--  SIDEBAR -->
-        @include('partials.sidebar_guru')
+        @include('partials.sidebar_superadmin')
 
         <!--  Main wrapper -->
         <div class="body-wrapper bg-white">
@@ -15,20 +15,10 @@
             @include('partials.navbar')
 
             <div class="container-fluid">
-
-                <!-- Breadcrumbs -->
-                <div class="d-flex align-items-center mb-3">
-                    <i class="fa-solid fa-house text-primary me-3"></i>
-                    <i class="fa-solid fa-chevron-left text-primary me-3"></i>
-                    <a href="#" onclick="window.location.href='{{ route('guru.classes.index') }}'"
-                        class="text-decoration-none text-primary me-3">Classes</a>
-                </div>
-                <!-- Breadcrumbs -->
-
                 <!-- HEADER & BUTTON -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="card-title d-flex align-items-center gap-2 mb-0">
-                        This is Your Students
+                        Manage Your E-report
                         {{-- <span>
                                     <iconify-icon icon="solar:question-circle-bold" class="fs-7 d-flex text-muted"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
@@ -37,12 +27,10 @@
                                 </span> --}}
                     </h3>
 
-
-
                     <!-- ADD BUTTON -->
                     {{-- <a href="#" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#addSchoolModal">
-                                <i class="fas fa-plus"></i> Add Student
+                                <i class="fas fa-plus"></i> Add Class
                             </a> --}}
 
                 </div>
@@ -50,42 +38,44 @@
                     <thead>
                         <tr>
                             <th width="30">No</th>
+                            <th>School ID</th>
+                            <th>Class ID</th>
                             <th>Student ID</th>
-                            <th>NISN</th>
-                            <th>NIS</th>
-                            <th>Full Name</th>
-                            <th>Gender</th>
-                            <th>Place Of Birth</th>
-                            <th>Date Of Birthday</th>
-                            {{-- <th>School ID</th>
-                                        <th>Class ID</th> --}}
-                            <th>Entry Year</th>
+                            <th>Tahun Ajaran</th>
+                            {{-- <th>User ID</th> --}}
+                            <th>Report File</th>
                             {{-- <th>Aksi</th> --}}
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($students->isEmpty())
+                        @if ($ereports->isEmpty())
                             <tr>
                                 <td colspan="10" class="text-center">
                                     <div class="py-4">
                                         <img src="{{ asset('assets/icons/close.png') }}" alt="No Data" width="40">
-                                        <p class="mt-2 text-muted">Tidak ada data Siswa.</p>
+                                        <p class="mt-2 text-muted">Tidak ada data E-reports</p>
                                     </div>
                                 </td>
                             </tr>
                         @else
-                            @foreach ($students as $index => $student)
+                            @foreach ($ereports as $ereport)
                                 <tr>
-                                    <td class="text-center">{{ $students->firstItem() + $index }}</td>
-                                    <td>{{ $student->student_id }}</td>
-                                    <td>{{ $student->nisn }}</td>
-                                    <td>{{ $student->nis }}</td>
-                                    <td>{{ $student->fullname }}</td>
-                                    <td>{{ $student->gender }}</td>
-                                    <td>{{ $student->pob }}</td>
-                                    <td>{{ $student->dob }}</td>
-                                    <td>{{ $student->entry_year }}</td>
-
+                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td>{{ $ereport->school->school_name }}</td>
+                                    <td>{{ $ereport->classModel->class_name }}</td>
+                                    <td>{{ $ereport->student->fullname }}</td>
+                                    <td>{{ $ereport->tahunAjarans->title }}</td>
+                                    <td>
+                                        @if ($ereport->report_file)
+                                            <a href="{{ asset('storage/' . $ereport->report_file) }}" target="_blank"
+                                                class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> Preview
+                                            </a>
+                                        @else
+                                            <span class="text-muted">No File</span>
+                                        @endif
+                                    </td>
+                                    {{-- <td>{{ $ereport->user_id }}</td> --}}
                                     {{-- <td>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
@@ -95,7 +85,7 @@
                                             <ul class="dropdown-menu">
                                                 <li>
                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#editStudentModal{{ $student->id }}">
+                                                        data-bs-target="#editEreportModal{{ $ereport->id }}">
                                                         <i class="fas fa-edit text-primary"></i> Edit
                                                     </a>
                                                 </li>
@@ -110,36 +100,36 @@
                                 </tr>
 
                                 <!-- Modal Edit -->
-                                {{-- <div class="modal fade" id="editStudentModal{{ $student->id }}" tabindex="-1"
-                                    aria-labelledby="editStudentModalLabel{{ $student->id }}" aria-hidden="true">
+                                {{-- <div class="modal fade" id="editStudentModal{{ $ereport->id }}" tabindex="-1"
+                                    aria-labelledby="editStudentModalLabel{{ $ereport->id }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editStudentModalLabel{{ $student->id }}">
-                                                    Edit Data Siswa
+                                                <h5 class="modal-title" id="editStudentModalLabel{{ $ereport->id }}">
+                                                    Edit Data E-report
                                                 </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{ route('students.update', $student->id) }}" method="POST">
+                                                <form action="{{ route('students.update', $ereport->id) }}" method="POST">
                                                     @csrf
                                                     @method('PUT')
 
                                                     <div class="mb-3">
                                                         <label class="form-label">Nama Lengkap</label>
                                                         <input type="text" class="form-control" name="fullname"
-                                                            value="{{ $student->fullname }}" required>
+                                                            value="{{ $ereport->fullname }}" required>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">Username</label>
                                                         <input type="text" class="form-control" name="username"
-                                                            value="{{ $student->username }}" required>
+                                                            value="{{ $ereport->username }}" required>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">Tahun Masuk</label>
                                                         <input type="number" class="form-control" name="entry_year"
-                                                            value="{{ $student->entry_year }}" required>
+                                                            value="{{ $ereport->entry_year }}" required>
                                                     </div>
 
                                                     <div class="modal-footer">
@@ -158,19 +148,17 @@
                     </tbody>
 
                 </table>
-                <div class="d-flex justify-content-center">
-                    {{ $students->links('pagination::bootstrap-5') }}
-                </div>
+                {{-- {{ $users->links() }} --}}
             </div>
         </div>
     </div>
 
     <!-- MODAL ADD SCHOOL -->
-    <div class="modal fade" id="addSchoolModal" tabindex="-1" aria-labelledby="addSchoolModalLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="addEreportModal" tabindex="-1" aria-labelledby="addEreportModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addSchoolModalLabel">Add New School</h5>
+                    <h5 class="modal-title" id="addEreportModalLabel">Add New Ereport</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -196,7 +184,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- FontAwesome for Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>

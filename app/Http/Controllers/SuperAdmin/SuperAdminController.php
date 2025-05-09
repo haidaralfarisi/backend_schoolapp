@@ -4,9 +4,11 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassModel;
+use App\Models\Delight;
 use App\Models\LessonPlan;
 use App\Models\Photo;
 use App\Models\School;
+use App\Models\SchoolInfo;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -25,12 +27,24 @@ class SuperAdminController extends Controller
 
         $lsplan = LessonPlan::all();
 
+        $delight = Delight::all();
+
+        $schoolinfo = SchoolInfo::all();
+
+
+
+
 
         $schoolCounts = $schools->count();
         $lscounts = $lsplan->count();
         $classCounts = $classes->count();
         $photoCounts = $photos->count();
         $videoCounts = $videos->count();
+        $delightCounts = $delight->count();
+        $schoolinfoCounts = $schoolinfo->count();
+
+
+
 
         $userCount = User::count();
         $guruCount = User::where('level', 'GURU')->count();
@@ -52,7 +66,9 @@ class SuperAdminController extends Controller
             'siswaCount',
             'orangtuaCount',
             'videoCounts',
-            'photoCounts'
+            'photoCounts',
+            'delightCounts',
+            'schoolinfoCounts',
         ));
     }
 }

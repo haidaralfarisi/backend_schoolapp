@@ -42,7 +42,7 @@
                     </div>
                 @endif
 
-                <table class="table table-bordered">
+                <table class="table">
                     <thead>
                         <tr>
                             <th width="30">No</th>
@@ -204,27 +204,27 @@
                         @csrf
                         <div class="mb-3">
                             <label for="school_name" class="form-label">School Name</label>
-                            <input type="text" class="form-control" id="school_name" name="school_name" required>
+                            <input type="text" placeholder="School Name" class="form-control" id="school_name" name="school_name" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="school_id" class="form-label">School ID</label>
-                            <input type="text" class="form-control" id="school_id" name="school_id" required>
+                            <input type="text" placeholder="School ID" class="form-control" id="school_id" name="school_id" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" placeholder="Email" class="form-control" id="email" name="email" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="region" class="form-label">Region</label>
-                            <input type="text" class="form-control" id="region" name="region" required>
+                            <input type="text" placeholder="Region" class="form-control" id="region" name="region" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="address" class="form-label">Address</label>
-                            <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="email" name="email" required>
+                            <textarea class="form-control" placeholder="Address" id="address" name="address" rows="3" required></textarea>
                         </div>
 
                         <div class="modal-footer">

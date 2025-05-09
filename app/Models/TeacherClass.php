@@ -20,4 +20,9 @@ class TeacherClass extends Model
         return $this->hasMany(School::class, 'school_id', 'school_id');
     }
 
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class, 'school_id', 'school_id');
+    }
+
 }

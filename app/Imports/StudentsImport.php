@@ -17,12 +17,13 @@ class StudentsImport implements ToModel, WithHeadingRow
             'school_id'     => $row['school_id'],
             'class_id'      => $row['class_id'],
             'nisn'          => $row['nisn'],
+            'nis'           => $row['nis'],
             'fullname'     => $row['fullname'],
-            'username'     => $row['username'],
             'gender'        => $row['gender'],
             'pob' => $row['pob'],
             'dob'          => $this->convertDate($row['dob']), // Panggil fungsi konversi
             'entry_year'    => $row['entry_year'],
+            'image'         => $row['image'],
         ]);
     }
 

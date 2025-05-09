@@ -261,17 +261,17 @@
 
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
+                            <input type="text" placeholder="Title" class="form-control" id="title" name="title" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="description" name="description" required>
+                            <textarea class="form-control" placeholder="Description" id="description" name="description" rows="4" required></textarea>
                         </div>
 
                         <div class="mb-3">
                             <label for="url" class="form-label">URL</label>
-                            <input type="text" class="form-control" id="url" name="url" required>
+                            <input type="text" placeholder="Url" class="form-control" id="url" name="url" required>
                         </div>
 
 

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('school_id'); // Relasi ke schools tanpa foreign key constraint
             $table->string('class_id')->nullable(); // Relasi ke classes tanpa foreign key constraint
-            $table->string('url');
+            $table->string('url')->nullable();
             $table->timestamps();
         });
     }

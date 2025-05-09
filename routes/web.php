@@ -12,6 +12,8 @@ use App\Http\Controllers\SuperAdmin\StudentController as SUPERADMINSTUDENT;
 use App\Http\Controllers\SuperAdmin\LessonPlanController as SUPERADMINLSPLAN;
 use App\Http\Controllers\SuperAdmin\SchoolInfoController as SUPERADMINSCHOOLINFO;
 use App\Http\Controllers\SuperAdmin\DelightController as SUPERADMINDELIGHT;
+use App\Http\Controllers\SuperAdmin\EreportController as SUPERADMINEREPORT;
+use App\Http\Controllers\SuperAdmin\TahunAjaranController as SUPERADMINTAHUNAJARAN;
 
 use App\Http\Controllers\Superadmin\ManageUserSchoolController as SUPERADMINMANAGE;
 use App\Http\Controllers\Superadmin\ManageTeacherClassController as SUPERADMINMANAGETEACHER;
@@ -75,6 +77,8 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
     Route::post('/users', [SUPERADMINUSER::class, 'store'])->name('superadmin.users.store');
     Route::put('/users/{id}', [SUPERADMINUSER::class, 'update'])->name('superadmin.users.update');
     Route::delete('/users/{id}', [SUPERADMINUSER::class, 'destroy'])->name('superadmin.users.destroy');
+    Route::get('/users/search', [SUPERADMINUSER::class, 'search'])->name('users.search');
+
 
     # Untuk Aksi Data User Orang Tua
     Route::get('/users-parent', [SUPERADMINORANGTUA::class, 'index'])->name('superadmin.parent.index');
@@ -94,6 +98,8 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
 
     Route::put('/users-parent/{id}', [SUPERADMINORANGTUA::class, 'update'])->name('superadmin.parent.update');
     Route::delete('/users-parent/{id}', [SUPERADMINORANGTUA::class, 'destroy'])->name('superadmin.parent.destroy');
+    Route::get('/parents/search', [SUPERADMINORANGTUA::class, 'search'])->name('parents.search');
+
     // Route::get('/users', [SUPERADMINUSER::class, 'index'])->name('superadmin.users.index');
     // Route::post('/users', [SUPERADMINUSER::class, 'store'])->name('superadmin.users.store');
     // Route::put('/users/{id}', [SUPERADMINUSER::class, 'update'])->name('superadmin.users.update');
@@ -113,6 +119,9 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
 
 
     Route::get('/student/{school_id}', [SUPERADMINSTUDENT::class, 'index'])->name('superadmin.students.index');
+
+    Route::get('/schools/{school_id}/students/search', [SUPERADMINSTUDENT::class, 'search'])->name('students.search');
+
     Route::post('/students/store', [SUPERADMINSTUDENT::class, 'store'])->name('superadmin.students.store');
     Route::put('/students/{student_id}', [SUPERADMINSTUDENT::class, 'update'])->name('superadmin.students.update');
     Route::delete('/students/{student_id}', [SUPERADMINSTUDENT::class, 'destroy'])->name('superadmin.students.destroy');
@@ -143,12 +152,22 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
     Route::post('/schoolInfo', [SUPERADMINSCHOOLINFO::class, 'store'])->name('superadmin.schoolInfo.store');
     Route::put('/schoolInfo/{id}', [SUPERADMINSCHOOLINFO::class, 'update'])->name('superadmin.schoolInfo.update');
     Route::delete('/schoolInfo/{id}', [SUPERADMINSCHOOLINFO::class, 'destroy'])->name('superadmin.schoolInfo.destroy');
-    
+
 
     Route::get('/delight', [SUPERADMINDELIGHT::class, 'index'])->name('superadmin.delight.index');
     Route::post('/delight', [SUPERADMINDELIGHT::class, 'store'])->name('superadmin.delight.store');
     Route::put('/delight/{id}', [SUPERADMINDELIGHT::class, 'update'])->name('superadmin.delight.update');
     Route::delete('/delight/{id}', [SUPERADMINDELIGHT::class, 'destroy'])->name('superadmin.delight.destroy');
+
+    Route::get('/ereports', [SUPERADMINEREPORT::class, 'index'])->name('superadmin.ereports.index');
+    Route::post('/ereports', [SUPERADMINDELIGHT::class, 'store'])->name('superadmin.ereports.store');
+    Route::delete('/ereports/{id}', [SUPERADMINEREPORT::class, 'destroy'])->name('superadmin.ereports.destroy');
+
+    Route::get('/thajaran', [SUPERADMINTAHUNAJARAN::class, 'index'])->name('superadmin.thajaran.index');
+    Route::post('/thajaran', [SUPERADMINTAHUNAJARAN::class, 'store'])->name('superadmin.thajaran.store');
+    Route::put('/thajaran/{tahun_ajaran_id}', [SUPERADMINTAHUNAJARAN::class, 'update'])->name('superadmin.thajaran.update');
+    Route::delete('/thajaran/{id}', [SUPERADMINTAHUNAJARAN::class, 'destroy'])->name('superadmin.thajaran.destroy');
+
 
 
 
@@ -170,6 +189,8 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
         ->name('superadmin.manage-userschools.update');
     Route::delete('/superadmin.manage-userschools/{id}', [SUPERADMINMANAGE::class, 'destroy'])
         ->name('superadmin.manage-userschools.destroy');
+
+    Route::get('/userschools/search', [SUPERADMINMANAGE::class, 'search'])->name('users-school.search');
 
     Route::post('/manage-teacher', [SUPERADMINMANAGETEACHER::class, 'store'])->name('superadmin.manage-teacher.store');
     Route::delete('/manage-teacher/{id}', [SUPERADMINMANAGETEACHER::class, 'destroy'])
@@ -223,8 +244,11 @@ Route::prefix('guru')->middleware(['auth', 'level:GURU'])->group(function () {
     Route::get('/classes', [GuruClass::class, 'index'])->name('guru.classes.index');
     Route::delete('/classes/{id}', [GuruClass::class, 'destroy'])->name('guru.classes.destroy');
 
-    Route::get('/eraports', [GuruEreport::class, 'index'])->name('guru.eraports.index');
-    Route::delete('/eraports/{id}', [GuruEreport::class, 'destroy'])->name('guru.eraports.destroy');
+    # Untuk Aksi Data Ereport
+    Route::get('/ereports', [GuruEreport::class, 'index'])->name('guru.ereports.index');
+    Route::post('/ereports', [GuruEreport::class, 'store'])->name('guru.ereports.store');
+    Route::put('/ereports/{id}', [GuruEreport::class, 'update'])->name('guru.ereports.update');
+    Route::delete('/eraports/{id}', [GuruEreport::class, 'destroy'])->name('guru.ereports.destroy');
 
     Route::get('/lsplans/{class_id}', [GURULSPLAN::class, 'index'])->name('guru.lsplans.index');
     Route::post('/lsplans/store', [GURULSPLAN::class, 'store'])->name('guru.lsplans.store');

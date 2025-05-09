@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('student_id')->unique(); // Identifier unik untuk siswa
             $table->string('nisn')->unique();
+            $table->string('nis')->unique();
             $table->string('fullname');
-            $table->string('username');
             $table->string('gender');
             $table->string('pob')->nullable();
             $table->date('dob')->nullable();
@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('class_id'); // Relasi ke classes
             $table->string('user_id')->nullable(); // Relasi ke users
             $table->year('entry_year'); // Tahun masuk siswa
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

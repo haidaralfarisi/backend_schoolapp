@@ -33,7 +33,7 @@ class VideoController extends Controller
             'description' => 'nullable|string',
             'school_id' => 'required|exists:schools,school_id',
             'class_id'  => 'required|exists:classes,class_id',
-            'url'         => 'required',
+            'url'         => 'nullable|string',
         ]);
 
         // dd($request->all());
@@ -60,7 +60,7 @@ class VideoController extends Controller
             'title'       => 'required|string|max:255',
             'school_id'   => 'required|exists:schools,school_id',
             'class_id'    => 'required|exists:classes,class_id',
-            'url'         => 'required|url',
+            'url'         => 'nullable|string',
             'description' => 'nullable|string',
         ]);
 

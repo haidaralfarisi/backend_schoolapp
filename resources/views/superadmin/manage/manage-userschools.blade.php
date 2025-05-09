@@ -22,10 +22,20 @@
                         Manage User Schools
                     </h3>
 
-                    <!-- ADD BUTTON -->
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignSchoolModal">
-                        <i class="fas fa-plus"></i> Add User School
-                    </button>
+                    <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+                        <!-- FORM SEARCH -->
+                        <form action="{{ route('users-school.search') }}" method="GET" class="d-flex">
+                            <input type="text" name="search" class="form-control" placeholder="Cari Assign..."
+                                value="{{ request('search') }}">
+                            <button type="submit" class="btn btn-outline-secondary ms-2"><i
+                                    class="fas fa-search"></i></button>
+                        </form>
+
+                        <!-- ADD BUTTON -->
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignSchoolModal">
+                            <i class="fas fa-plus"></i> Add User School
+                        </button>
+                    </div>
                 </div>
 
                 <!-- SUCCESS MESSAGE -->
@@ -67,11 +77,11 @@
                                     </td>
                                 </tr>
                             @else
-                            @foreach ($user_schools as $index => $us)
+                                @foreach ($user_schools as $index => $us)
                                     <tr>
                                         <td class="text-center">{{ $user_schools->firstItem() + $index }}</td>
 
-                                {{-- @foreach ($user_schools as $us)
+                                        {{-- @foreach ($user_schools as $us)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td> --}}
                                         <td>{{ $us->user->fullname }}</td>

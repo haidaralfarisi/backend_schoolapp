@@ -28,21 +28,36 @@
                     </h3>
 
                     <!-- ADD BUTTON -->
-                    {{-- <a href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#addSchoolModal">
-                                <i class="fas fa-plus"></i> Add Class
-                            </a> --}}
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEreportModal">
+                        <i class="fas fa-plus"></i> Add E-Reports
+                    </a>
 
                 </div>
+
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th width="30">No</th>
                             <th>School ID</th>
                             <th>Class ID</th>
-                            <th>Report File</th>
                             <th>Student ID</th>
-                            <th>User ID</th>
+                            {{-- <th>User ID</th> --}}
+                            <th>Tahun Ajaran</th>
+                            <th>Report File</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -60,11 +75,21 @@
                             @foreach ($ereports as $ereport)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $ereport->school_id }}</td>
-                                    <td>{{ $ereport->class_id }}</td>
-                                    <td>{{ $ereport->report_file }}</td>
-                                    <td>{{ $ereport->student_id }}</td>
-                                    <td>{{ $ereport->user_id }}</td>
+                                    <td>{{ $ereport->school->school_name }}</td>
+                                    <td>{{ $ereport->classModel->class_name }}</td>
+                                    <td>{{ $ereport->student->fullname }}</td>
+                                    {{-- <td>{{ $ereport->user->fullname}}</td> --}}
+                                    <td>{{ $ereport->tahunAjarans->title }}</td>
+                                    <td>
+                                        @if ($ereport->report_file)
+                                            <a href="{{ asset('storage/' . $ereport->report_file) }}" target="_blank"
+                                                class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> Preview
+                                            </a>
+                                        @else
+                                            <span class="text-muted">No File</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
@@ -74,14 +99,20 @@
                                             <ul class="dropdown-menu">
                                                 <li>
                                                     <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#editStudentModal{{ $student->id }}">
+                                                        data-bs-target="#editEreportModal{{ $ereport->id }}">
                                                         <i class="fas fa-edit text-primary"></i> Edit
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item text-danger" href="#">
-                                                        <i class="fas fa-trash-alt"></i> Delete
-                                                    </a>
+                                                    <form action="{{ route('guru.ereports.destroy', $ereport->id) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-trash-alt"></i> Delete
+                                                        </button>
+                                                    </form>
                                                 </li>
                                             </ul>
                                         </div>
@@ -89,36 +120,71 @@
                                 </tr>
 
                                 <!-- Modal Edit -->
-                                <div class="modal fade" id="editStudentModal{{ $ereport->id }}" tabindex="-1"
-                                    aria-labelledby="editStudentModalLabel{{ $ereport->id }}" aria-hidden="true">
+                                <div class="modal fade" id="editEreportModal{{ $ereport->id }}" tabindex="-1"
+                                    aria-labelledby="editEreportModalLabel{{ $ereport->id }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editStudentModalLabel{{ $ereport->id }}">
+                                                <h5 class="modal-title" id="editEreportModalLabel{{ $ereport->id }}">
                                                     Edit Data E-report
                                                 </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form action="{{ route('students.update', $ereport->id) }}" method="POST">
+                                                <form action="{{ route('guru.ereports.update', $ereport->id) }}"
+                                                    method="POST">
                                                     @csrf
                                                     @method('PUT')
 
+                                                    <input type="hidden" name="school_id"
+                                                        value="{{ $ereport->school_id }}">
+                                                    <input type="hidden" name="class_id" value="{{ $ereport->class_id }}">
+                                                    <input type="hidden" name="user_id" value="{{ $ereport->user_id }}">
+
                                                     <div class="mb-3">
-                                                        <label class="form-label">Nama Lengkap</label>
-                                                        <input type="text" class="form-control" name="fullname"
-                                                            value="{{ $ereport->fullname }}" required>
+                                                        <label for="student_id" class="form-label">Student</label>
+                                                        <select name="student_id" class="form-control" required>
+                                                            <option value="">- Pilih Siswa -</option>
+                                                            @foreach ($students as $student)
+                                                                <option value="{{ $student->student_id }}"
+                                                                    {{ $student->student_id == $ereport->student_id ? 'selected' : '' }}>
+                                                                    {{ $student->fullname }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
+
                                                     <div class="mb-3">
-                                                        <label class="form-label">Username</label>
-                                                        <input type="text" class="form-control" name="username"
-                                                            value="{{ $ereport->username }}" required>
+                                                        <label for="tahun_ajaran_id" class="form-label">Tahun Ajaran</label>
+                                                        <select name="tahun_ajaran_id" class="form-control" required>
+                                                            <option value="">- Pilih Tahun Ajaran -</option>
+                                                            @foreach ($tahunAjarans as $tahunAjaran)
+                                                                <option value="{{ $tahunAjaran->tahun_ajaran_id }}"
+                                                                    {{ $tahunAjaran->tahun_ajaran_id == $ereport->tahun_ajaran_id ? 'selected' : '' }}>
+                                                                    {{ $tahunAjaran->title }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
+
                                                     <div class="mb-3">
-                                                        <label class="form-label">Tahun Masuk</label>
-                                                        <input type="number" class="form-control" name="entry_year"
-                                                            value="{{ $ereport->entry_year }}" required>
+                                                        <label for="report_file" class="form-label fw-bold">E-Report
+                                                            File</label>
+                                                        <div class="input-group">
+                                                            <input type="file" class="form-control" id="report_file"
+                                                                name="report_file">
+                                                        </div>
+                                                        @if ($ereport->report_file)
+                                                            <div class="mt-2 p-2 border rounded bg-light">
+                                                                <p class="mb-1"><strong>File PDF saat ini:</strong>
+                                                                </p>
+                                                                <a href="{{ asset('storage/' . $ereport->report_file) }}"
+                                                                    target="_blank" class="btn btn-sm btn-primary">
+                                                                    <i class="fas fa-eye"></i> Lihat PDF
+                                                                </a>
+                                                            </div>
+                                                        @endif
                                                     </div>
 
                                                     <div class="modal-footer">
@@ -143,28 +209,50 @@
     </div>
 
     <!-- MODAL ADD SCHOOL -->
-    <div class="modal fade" id="addSchoolModal" tabindex="-1" aria-labelledby="addSchoolModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addEreportModal" tabindex="-1" aria-labelledby="addEreportModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addSchoolModalLabel">Add New School</h5>
+                    <h5 class="modal-title" id="addEreportModalLabel">Add New E-Reports</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="#" method="POST">
+                    <h3>{{ $teacherClass->school->school_name }}</h3>
+                    <p>{{ $teacherClass->class_id }}</p>
+
+                    <form action="{{ route('guru.ereports.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="school_id" value="{{ $teacherClass->school->school_id ?? '' }}">
+                        <input type="hidden" name="class_id" value="{{ $teacherClass->class_id }}">
+                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
                         <div class="mb-3">
-                            <label for="schoolName" class="form-label">School Name</label>
-                            <input type="text" class="form-control" id="schoolName" name="schoolName" required>
+                            <label for="student_id" class="form-label">Student ID</label>
+                            <select name="student_id" class="form-control" required>
+                                <option value="">- Pilih Siswa - </option>
+                                @foreach ($students as $student)
+                                    <option value="{{ $student->student_id }}">{{ $student->fullname }}</option>
+                                @endforeach
+                            </select>
                         </div>
+
                         <div class="mb-3">
-                            <label for="location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="location" name="location" required>
+                            <label for="tahun_ajaran_id" class="form-label">Tahun Ajaran ID</label>
+                            <select name="tahun_ajaran_id" class="form-control" required>
+                                <option value="">- Pilih Tahun Ajaran -</option>
+                                @foreach ($tahunAjarans as $tahunAjaran)
+                                    <option value="{{ $tahunAjaran->tahun_ajaran_id }}">{{ $tahunAjaran->title }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
+
                         <div class="mb-3">
-                            <label for="established" class="form-label">Established Year</label>
-                            <input type="number" class="form-control" id="established" name="established" required>
+                            <label for="report_file" class="form-label">Report File</label>
+                            <input type="file" class="form-control" id="report_file" name="report_file" required>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Save</button>

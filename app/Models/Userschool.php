@@ -18,4 +18,9 @@ class Userschool extends Model
     {
         return $this->belongsTo(School::class, 'school_id', 'school_id');
     }
+
+    public function ereports(): BelongsTo
+    {
+        return $this->belongsTo(Ereport::class, 'school_id', 'school_id');
+    }
 }

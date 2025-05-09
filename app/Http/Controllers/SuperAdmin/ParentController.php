@@ -17,9 +17,28 @@ class ParentController extends Controller
 
     public function index()
     {
-
         $parents = User::where('level', 'ORANGTUA')->with('students')->paginate(10);
         $students = Student::all();
+        return view('superadmin.parent.index', compact('parents', 'students'));
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $parents = User::where('level', 'ORANGTUA')
+            ->where(function ($query) use ($search) {
+                $query->where('fullname', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhereHas('students', function ($studentQuery) use ($search) {
+                        $studentQuery->where('fullname', 'like', "%{$search}%");
+                    });
+            })
+            ->with('students')
+            ->paginate(10);
+
+        $students = Student::all();
+
         return view('superadmin.parent.index', compact('parents', 'students'));
     }
 

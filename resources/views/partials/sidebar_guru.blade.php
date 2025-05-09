@@ -76,6 +76,18 @@
                         <span class="hide-menu">Photos</span>
                     </a>
                 </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->routeIs('guru.ereports.index') ? 'active' : '' }}"
+                        href="{{ route('guru.ereports.index') }}" aria-expanded="false">
+
+                        {{-- <a class="sidebar-link" href="{{ route('superadmin.parent.index') }}" aria-expanded="false"> --}}
+                        <span>
+                            <iconify-icon icon="material-symbols:book-2-outline" class="fs-6"></iconify-icon>
+                        </span>
+                        <span class="hide-menu">E-Raport</span>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->

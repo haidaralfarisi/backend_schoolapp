@@ -47,9 +47,15 @@ class ClassModel extends Model
     {
         return $this->hasMany(Photo::class);
     }
+
     public function lessonplans()
     {
         return $this->hasMany(LessonPlan::class, 'class_id', 'class_id');
+    }
+
+    public function ereports()
+    {
+        return $this->hasMany(Ereport::class, 'class_id');
     }
 
     

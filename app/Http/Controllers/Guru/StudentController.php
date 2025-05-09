@@ -11,7 +11,7 @@ class StudentController extends Controller
 {
     public function index($id)
     {
-        $students = Student::where('class_id', $id)->get();
+        $students = Student::where('class_id', $id)->paginate(10);
         return view('guru.student.index', compact('students'));
     }
 }

@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ereports', function (Blueprint $table) {
+        Schema::create('tahun_ajarans', function (Blueprint $table) {
             $table->id();
-            $table->string('school_id');
-            $table->string('class_id');
-            $table->string('report_file');
-            $table->string('student_id');
-            $table->string('user_id');
-            $table->string('tahun_ajaran_id'); // foreign key to tahun_ajarans table
-
+            $table->string('tahun_ajaran_id')->unique(); #2025 - 2026 # TA20252026
+            $table->string('title'); # Tahun Ajaran 2025 - 2026
             $table->timestamps();
         });
     }
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ereports');
+        Schema::dropIfExists('tahun_ajarans');
     }
 };

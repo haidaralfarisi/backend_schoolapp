@@ -58,4 +58,9 @@ class School extends Model
     {
         return $this->hasMany(SchoolInfo::class, 'school_id');
     }
+
+    // public function ereports()
+    // {
+    //     return $this->hasMany(Ereport::class, 'school_id');
+    // }
 }
