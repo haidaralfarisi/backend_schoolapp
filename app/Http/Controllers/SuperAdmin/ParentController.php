@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use App\Exports\ParentTemplateExport;
 use App\Http\Controllers\Controller;
+use App\Imports\ParentsImport;
 use App\Models\Student;
 // use App\Http\Controllers\ParentController;
 
@@ -11,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ParentController extends Controller
 {
@@ -226,6 +229,23 @@ class ParentController extends Controller
 
         return redirect()->back()->with('success', 'Siswa berhasil dihapus dari orangtua.');
     }
+
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new ParentTemplateExport, 'parent_template.xlsx');
+    }
+
+    public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv'
+    ]);
+
+    Excel::import(new ParentsImport, $request->file('file'));
+
+    return redirect()->back()->with('success', 'Data orangtua berhasil diimpor.');
+}
 }
 
 

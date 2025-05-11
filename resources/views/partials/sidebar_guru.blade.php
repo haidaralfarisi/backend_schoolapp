@@ -7,7 +7,7 @@
                 <img src="{{ asset('assets/images/logos/logo.png') }}" height="60" class="me-2 mt-2 ps-2" alt="">
                 <div class="fw-bolder fs-6">Dian Didaktika</div>
             </a>
-    
+
             <!-- Tombol Close di sebelah logo, muncul hanya di layar kecil -->
             <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                 <i class="ti ti-x fs-7"></i>
@@ -24,9 +24,9 @@
                     <span class="hide-menu">Home</span>
                 </li>
 
-                <!-- Dashboard -->
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ route('guru.dashboard') }}" aria-expanded="false">
+                    <a class="sidebar-link {{ request()->routeIs('guru.dashboard') ? 'active' : '' }}"
+                        href="{{ route('guru.dashboard') }}" aria-expanded="false">
                         <span>
                             <iconify-icon icon="solar:home-smile-bold-duotone" class="fs-6"></iconify-icon>
                         </span>
@@ -43,35 +43,30 @@
                 <!-- Menu Dashboard -->
 
                 @php
-                    $isActive = in_array(Request::segment(2), ['class', 'student', 'lsplans'])
-                        ? 'nav-active text-white'
-                        : '';
+                    $isActive = in_array(Route::currentRouteName(), [
+                        'guru.classes.index',
+                        'guru.students.index',
+                        'guru.lsplans.index',
+                    ]);
                 @endphp
-                <li class="sidebar-item {{ $isActive }}">
+
+                <!-- Schools -->
+                <li class="sidebar-item {{ $isActive ? 'nav-active' : '' }}">
                     <a class="sidebar-link" href="{{ route('guru.classes.index') }}" aria-expanded="false">
                         <span>
                             <iconify-icon icon="solar:layers-minimalistic-bold-duotone"
-                                class="fs-6 {{ $isActive }}"></iconify-icon>
+                                class="fs-6 {{ $isActive ? 'text-white' : '' }}"></iconify-icon>
                         </span>
-                        <span
-                            class="hide-menu {{ in_array(Request::segment(2), ['class', 'student', 'lsplans']) ? 'text-white' : '' }}">Classes</span>
+                        <span class="hide-menu {{ $isActive ? 'text-white' : '' }}">Classes</span>
                     </a>
                 </li>
 
-                <!-- Student -->
-                {{-- <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ route('guru.students.index') }}" aria-expanded="false">
-                        <span>
-                            <iconify-icon icon="solar:file-text-bold-duotone" class="fs-6"></iconify-icon>
-                        </span>
-                        <span class="hide-menu">Students</span>
-                    </a>
-                </li> --}}
 
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ route('guru.photos.index') }}" aria-expanded="false">
+                    <a class="sidebar-link {{ request()->routeIs('guru.photos.index') ? 'active' : '' }}"
+                        href="{{ route('guru.photos.index') }}" aria-expanded="false">
                         <span>
-                            <iconify-icon icon="solar:gallery-bold-duotone" class="fs-6"></iconify-icon>
+                            <iconify-icon icon="solar:home-smile-bold-duotone" class="fs-6"></iconify-icon>
                         </span>
                         <span class="hide-menu">Photos</span>
                     </a>

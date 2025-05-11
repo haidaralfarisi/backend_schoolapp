@@ -40,6 +40,7 @@ class UserController extends Controller
         $request->validate([
             'nip' => ['numeric', 'unique:users,nip'],
             'fullname' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'email' => ['email', 'unique:users,email'],
             'password' => 'required|min:6',
             'level' => 'required|string',
@@ -58,6 +59,7 @@ class UserController extends Controller
         User::create([
             'nip' => $request->nip,
             'fullname' => $request->fullname,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'level' => $request->level,
@@ -94,6 +96,7 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             'fullname' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $id,
             'level' => 'required|string',
             'photo' => 'nullable|image|max:2048',
@@ -102,6 +105,7 @@ class UserController extends Controller
 
         // Update data user
         $user->fullname = $validatedData['fullname'];
+        $user->username = $validatedData['username'];
         $user->email = $validatedData['email'];
         $user->level = $validatedData['level'];
 

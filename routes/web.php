@@ -89,8 +89,11 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
     Route::post('/users-parent/assign', [SUPERADMINORANGTUA::class, 'assign'])->name('superadmin.parent.assign');
     // Route::post('/manage-parent', [SUPERADMINORANGTUA::class, 'store'])->name('superadmin.parent.store');
     Route::post('/parent/{id}/update-students', [SUPERADMINORANGTUA::class, 'updateStudents'])->name('parents.updateStudents');
-    
+    Route::get('/template-import-parent', [SUPERADMINORANGTUA::class, 'downloadTemplate'])->name('template.parent');
+    Route::post('/import-parents', [SUPERADMINORANGTUA::class, 'import'])->name('import.parents');
 
+
+    
     // Route::delete('/parents/{parentId}/remove-student/{studentId}', [SUPERADMINORANGTUA::class, 'removeStudent'])->name('parents.removeStudent');
 
     // Route::delete('/parents/{parent}/remove-student/{student}', [SUPERADMINORANGTUA::class, 'removeStudent'])
@@ -129,6 +132,10 @@ Route::prefix('superadmin')->middleware(['auth', 'level:SUPERADMIN'])->group(fun
     Route::post('/students/store', [SUPERADMINSTUDENT::class, 'store'])->name('superadmin.students.store');
     Route::put('/students/{student_id}', [SUPERADMINSTUDENT::class, 'update'])->name('superadmin.students.update');
     Route::delete('/students/{student_id}', [SUPERADMINSTUDENT::class, 'destroy'])->name('superadmin.students.destroy');
+
+    // Route::get('/students/search', [SUPERADMINSTUDENT::class, 'search'])->name('students.search');
+
+
 
 
     Route::get('/lsplans/{school_id}', [SUPERADMINLSPLAN::class, 'index'])->name('superadmin.lsplans.index');

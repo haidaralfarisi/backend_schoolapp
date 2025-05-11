@@ -38,6 +38,26 @@ class StudentController extends Controller
         return view('superadmin.student.index', compact('school', 'classes', 'students'));
     }
 
+    // public function searchStudent(Request $request)
+    // {
+    //     $search = $request->get('search');
+
+    //     $students = Student::query();
+
+    //     if ($search) {
+    //         $students->where('fullname', 'like', "%{$search}%");
+    //     }
+
+    //     $results = $students->limit(50)->get()->map(function ($student) {
+    //         return [
+    //             'id' => $student->id,
+    //             'text' => $student->student_id . ' - ' . $student->fullname,
+    //         ];
+    //     });
+
+    //     return response()->json(['results' => $results]);
+    // }
+
 
 
     public function store(Request $request)

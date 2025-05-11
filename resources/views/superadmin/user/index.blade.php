@@ -30,10 +30,12 @@
                     <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
                         <!-- FORM SEARCH -->
                         <form action="{{ route('users.search') }}" method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control" placeholder="Cari user..." value="{{ request('search') }}">
-                            <button type="submit" class="btn btn-outline-secondary ms-2"><i class="fas fa-search"></i></button>
+                            <input type="text" name="search" class="form-control" placeholder="Cari user..."
+                                value="{{ request('search') }}">
+                            <button type="submit" class="btn btn-outline-secondary ms-2"><i
+                                    class="fas fa-search"></i></button>
                         </form>
-                
+
                         <!-- ADD BUTTON -->
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
                             <i class="fas fa-plus"></i> Add User
@@ -66,6 +68,7 @@
                                 <th width="30">No</th>
                                 <th>NIP</th>
                                 <th>Full Name</th>
+                                <th>User Name</th>
                                 <th>Email</th>
                                 <th>Level</th>
                                 <th>Photo</th>
@@ -79,6 +82,7 @@
                                     {{-- <td class="text-center">{{ $loop->iteration }}</td> --}}
                                     <td>{{ $user->nip }}</td>
                                     <td>{{ $user->fullname }}</td>
+                                    <td>{{ $user->username }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>
                                         @switch($user->level)
@@ -164,9 +168,16 @@
                                                     @method('PUT')
 
                                                     <div class="mb-3">
-                                                        <label for="fullname" class="form-label">FUll Nama</label>
+                                                        <label for="fullname" class="form-label">Full Nama</label>
                                                         <input type="text" class="form-control" id="fullname"
                                                             name="fullname" value="{{ old('fullname', $user->fullname) }}"
+                                                            required>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="username" class="form-label">User Name</label>
+                                                        <input type="text" class="form-control" id="username"
+                                                            name="username" value="{{ old('username', $user->username) }}"
                                                             required>
                                                     </div>
 
@@ -263,6 +274,11 @@
                             <label for="fullname" class="form-label">Full Name</label>
                             <input placeholder="Full Name" type="text" class="form-control" id="fullname"
                                 name="fullname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Username" class="form-label">User Name</label>
+                            <input placeholder="User Name" type="text" class="form-control" id="Username"
+                                name="Username" required>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>

@@ -32,6 +32,12 @@
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addParentModal">
                             <i class="fas fa-plus"></i> Add Parents
                         </a>
+
+                        <!-- Import Button -->
+                        <a href="#" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#importParentsModal">
+                            <i class="fas fa-file-import"></i> Import Parents
+                        </a>
                     </div>
                 </div>
                 
@@ -326,9 +332,82 @@
         </div>
     </div>
 
+    <div class="modal fade" id="importParentsModal" tabindex="-1" aria-labelledby="importParentsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importParentsModalLabel">
+                        <i class="fas fa-file-excel"></i> Import Parents from Excel
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-grid gap-2 mb-3">
+                        <a href="{{ route('template.parent') }}" class="btn btn-info text-white">
+                            <i class="fas fa-download"></i> Download Template
+                        </a>
+                    </div>
+                    <form id="importStudentsForm" action="{{ route('import.parents') }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="file" class="form-label fw-bold">Upload Excel File</label>
+                            <input type="file" class="form-control" name="file" id="file"
+                                accept=".xls, .xlsx" required>
+                            <small class="text-muted">Only .xls or .xlsx files allowed.</small>
+                        </div>
+                        <div id="uploadProgress" class="progress d-none">
+                            <div id="uploadBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                style="width: 0%">0%</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times"></i> Close
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Import
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- FontAwesome for Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+
+    {{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $('#assignParentModal').on('shown.bs.modal', function() {
+            $('#user_id').select2({
+                placeholder: 'Pilih Murid',
+                allowClear: true,
+                dropdownParent: $('#assignParentModal'),
+                ajax: {
+                    url: '{{ route('students.search') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+    </script> --}}
 
     <script>
         document.getElementById('addDropdown').addEventListener('click', function() {
